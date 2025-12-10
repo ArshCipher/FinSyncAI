@@ -2,10 +2,8 @@ import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/finsync';
 
-// MongoDB Atlas connection options
+// MongoDB connection options (removed deprecated options)
 const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
 };
