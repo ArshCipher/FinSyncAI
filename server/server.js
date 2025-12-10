@@ -38,7 +38,19 @@ app.get('/api/health', (req, res) => {
 
 // Serve static files from dist folder (for Railway deployment)
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, '../dist')));
+const distPath = path.join(__dirname, '../dist');
+
+// Debug: Check if dist folder exists
+import { existsSync, readdirSync } from 'fs';
+if (existsSync(distPath)) {
+  const files = readdirSync(distPath);
+  console.log(`✓ Dist folder found with ${files.length} files`);
+  console.log(`  Files: ${files.slice(0, 5).join(', ')}${files.length > 5 ? '...' : ''}`);
+} else {
+  console.error('✗ Dist folder not found at:', distPath);
+}
+
+app.use(express.static(distPath));
 
 // ============ CRM Service ============
 app.get('/api/customers/phone/:phone', async (req, res) => {
