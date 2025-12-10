@@ -15,9 +15,30 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Initialize database
-await connectDB();
-await seedDatabase();
+// Initialize database (non-blocking)
+let dbConnected = false;
+connectDB().then(async (db) => {
+  if (db) {
+    await seedDatabase();
+    dbConnected = true;
+    console.log('✓ Database ready');
+  }
+}).catch(err => {
+  console.warn('⚠ Running without database');
+});
+
+// Health check (works without DB)
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    database: dbConnected ? 'connected' : 'disconnected'
+  });
+});
+
+// Serve static files from dist folder (for Railway deployment)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // ============ CRM Service ============
 app.get('/api/customers/phone/:phone', async (req, res) => {
@@ -290,18 +311,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Serve static files from dist folder (for Railway deployment)
-if (process.env.NODE_ENV === 'production') {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  app.use(express.static(path.join(__dirname, '../dist')));
-  
-  // All non-API routes serve index.html (SPA routing)
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-  });
-}
+// All non-API routes serve index.html (SPA routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n✓ FinSync AI Backend running on http://localhost:${PORT}`);
-  console.log(`✓ API endpoints ready\n`);
+  console.log(`\n✓ FinSync AI running on port ${PORT}`);
+  console.log(`✓ Frontend: http://localhost:${PORT}`);
+  console.log(`✓ API: http://localhost:${PORT}/api`);
+  console.log(`✓ Health: http://localhost:${PORT}/api/health\n`);
 });
