@@ -18,19 +18,25 @@ export class PDFGenerator {
     // Set up fonts and styling
     doc.setFont('helvetica');
     
-    // Add FinSync AI logo/header
-    doc.setFontSize(24);
-    doc.setTextColor(168, 85, 247); // Purple color
-    doc.text('FinSync AI', 20, 25);
+    // Add official letterhead
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text('FINSYNC AI FINANCIAL SERVICES LIMITED', 105, 20, { align: 'center' });
     
-    doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Instant Loan Approval Platform', 20, 32);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    doc.text('Registered Office: 123 Finance Street, Mumbai - 400001, India', 105, 26, { align: 'center' });
+    doc.text('CIN: U65999MH2024PLC123456 | NBFC Registration: N-14.03299', 105, 30, { align: 'center' });
+    doc.text('Tel: 1800-FINSYNC | Email: loans@finsyncai.com | www.finsyncai.com', 105, 34, { align: 'center' });
     
     // Add horizontal line
-    doc.setDrawColor(168, 85, 247);
-    doc.setLineWidth(0.5);
-    doc.line(20, 36, 190, 36);
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.8);
+    doc.line(20, 38, 190, 38);
+    doc.setLineWidth(0.3);
+    doc.line(20, 39.5, 190, 39.5);
 
     // Parse and format the sanction letter
     const lines = this.formatSanctionLetter(options.sanctionLetter);
@@ -95,22 +101,35 @@ export class PDFGenerator {
       }
     });
 
-    // Add footer
+    // Add legal footer
     const totalPages = doc.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
+      
+      // Footer separator line
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.3);
+      doc.line(20, doc.internal.pageSize.height - 20, 190, doc.internal.pageSize.height - 20);
+      
+      doc.setFontSize(7);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
       doc.text(
-        `Page ${i} of ${totalPages}`,
-        doc.internal.pageSize.width / 2,
-        doc.internal.pageSize.height - 10,
+        'This is a system-generated document and does not require physical signature.',
+        105,
+        doc.internal.pageSize.height - 16,
         { align: 'center' }
       );
       doc.text(
-        'FinSync AI - Powered by Advanced AI | support@finsync.ai | 1800-FINSYNC',
-        doc.internal.pageSize.width / 2,
-        doc.internal.pageSize.height - 5,
+        'Subject to RBI NBFC Guidelines | Governed by Indian Contract Act, 1872',
+        105,
+        doc.internal.pageSize.height - 12,
+        { align: 'center' }
+      );
+      doc.text(
+        `Page ${i} of ${totalPages} | Document ID: FSL-${options.customerId}-${Date.now()}`,
+        105,
+        doc.internal.pageSize.height - 8,
         { align: 'center' }
       );
     }
