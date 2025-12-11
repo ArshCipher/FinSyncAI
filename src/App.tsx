@@ -1132,15 +1132,15 @@ function App() {
   };
 
   return (
-    <div className="h-screen bg-dark bg-gradient-premium overflow-hidden">
-      <div className="h-full grid grid-cols-1 lg:grid-cols-2">
+    <div className="fixed inset-0 bg-dark bg-gradient-premium overflow-hidden">
+      <div className="h-full w-full grid grid-cols-1 lg:grid-cols-2">
         {/* Left: Hero Section */}
         <div className="hidden lg:flex">
           <Hero />
         </div>
 
         {/* Right: Chat Section */}
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full w-full">
           <ChatWindow
             messages={messages}
             isLoading={isLoading}
