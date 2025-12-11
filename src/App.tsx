@@ -1132,13 +1132,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-dark bg-gradient-premium overflow-hidden">
-      <div className="h-screen grid lg:grid-cols-2">
+    <div className="h-screen bg-dark bg-gradient-premium overflow-hidden">
+      <div className="h-full grid lg:grid-cols-2">
         {/* Left: Hero Section */}
         <Hero />
 
         {/* Right: Chat Section */}
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-full">
           <ChatWindow
             messages={messages}
             isLoading={isLoading}
