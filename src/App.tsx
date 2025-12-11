@@ -228,15 +228,26 @@ function App() {
           emiData?.emi || 0
         );
         
+        console.log('🔴 POST-UPLOAD APPROVAL - Saving sanction letter to context');
+        
+        // SAVE sanction letter to context so PDF can be downloaded!
+        setContext((prev) => ({
+          ...prev,
+          sanctionLetter,
+          sanctionLetterGenerated: true,
+          underwritingResult: { ...result, emi: emiData?.emi }
+        }));
+        
         const sanctionMessage: Message = {
           id: (Date.now() + 2).toString(),
           sender: 'assistant',
-          content: `CONGRATULATIONS! Your loan has been APPROVED after document verification.\n\n${result.reason}\n\nHere's your official Sanction Letter:\n\n${sanctionLetter}\n\nNext Steps:\n> Review the sanction letter carefully\n> Submit signed copy within 15 days\n> Complete final KYC documentation\n> Funds will be disbursed within 48 hours\n\nThis offer is valid until ${new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN')}\n\nWould you like to proceed with the documentation?`,
+          content: `CONGRATULATIONS! Your loan has been APPROVED after document verification.\n\n${result.reason}\n\nHere's your official Sanction Letter:\n\n${sanctionLetter}\n\nNext Steps:\n• Download PDF copy for your records\n• Submit signed copy within 15 days\n• Complete final KYC documentation\n• Funds will be disbursed within 48 hours\n\nThis offer is valid until ${new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN')}\n\nUse the quick actions below to download or email your sanction letter!`,
           timestamp: new Date().toISOString(),
           meta: { agent: 'sanction' },
         };
         
         setMessages((prev) => [...prev, sanctionMessage]);
+        setQuickReplies(QUICK_REPLIES.postApproval);
       } else {
         const rejectionMessage: Message = {
           id: (Date.now() + 2).toString(),
