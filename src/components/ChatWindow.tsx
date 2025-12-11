@@ -3,6 +3,8 @@ import { Message } from '../types';
 import MessageBubble from './MessageBubble';
 import TypingIndicator from './TypingIndicator';
 
+import { QuickReply } from './QuickReplyChips';
+
 interface ChatWindowProps {
   messages: Message[];
   isLoading: boolean;
@@ -11,8 +13,8 @@ interface ChatWindowProps {
   onSend: () => void;
   onFileUpload?: (file: File) => void;
   showFileUpload?: boolean;
-  quickReplies?: string[];
-  onQuickReply?: (reply: string) => void;
+  quickReplies?: QuickReply[];
+  onQuickReply?: (action: string, text: string) => void;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ 
@@ -22,7 +24,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   onInputChange, 
   onSend,
   onFileUpload,
-  showFileUpload = false
+  showFileUpload = false,
+  quickReplies,
+  onQuickReply
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -90,14 +94,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         {quickReplies && quickReplies.length > 0 && (
           <div className="px-6 py-3 border-t border-white/5">
             <div className="flex flex-wrap gap-2">
-              {quickReplies.map((reply, index) => (
+              {quickReplies.map((reply: QuickReply) => (
                 <button
-                  key={index}
-                  onClick={() => onQuickReply?.(reply)}
+                  key={reply.id}
+                  onClick={() => onQuickReply?.(reply.action, reply.text)}
                   disabled={isLoading}
                   className="px-4 py-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {reply}
+                  {reply.icon && <span className="mr-2">{reply.icon}</span>}
+                  {reply.text}
                 </button>
               ))}
             </div>
