@@ -97,14 +97,22 @@ body {
 .safe-area-full {
   padding-top: max(env(safe-area-inset-top), 2rem);
   padding-bottom: max(env(safe-area-inset-bottom), 2rem);
-  padding-left: max(env(safe-area-inset-left), 0.5rem);
-  padding-right: max(env(safe-area-inset-right), 0.5rem);
+  padding-left: max(env(safe-area-inset-left), 1rem);
+  padding-right: max(env(safe-area-inset-right), 1rem);
 }
 
-/* Extra padding for very tall/narrow screens (aspect ratio > 2:1) */
+/* Extra padding for very narrow screens (tall aspect ratios like 20:9) */
 @media (max-aspect-ratio: 1/2) {
   .safe-area-full {
     padding-top: max(env(safe-area-inset-top), 3rem);
     padding-bottom: max(env(safe-area-inset-bottom), 3rem);
+  }
+}
+
+/* Reduced padding for short screens (like 1024x600) */
+@media (max-height: 700px) {
+  .safe-area-full {
+    padding-top: max(env(safe-area-inset-top), 1rem);
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
   }
 }
