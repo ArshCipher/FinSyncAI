@@ -21,7 +21,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  min-width: 320px;
+  min-width: 280px; /* Reduced from 320px for very small screens */
   height: 100%;
   min-height: 100vh;
   min-height: -webkit-fill-available; /* iOS Safari fix */
@@ -106,5 +106,15 @@ body {
   .safe-area-full {
     padding-top: max(env(safe-area-inset-top), 3rem);
     padding-bottom: max(env(safe-area-inset-bottom), 3rem);
+  }
+}
+
+/* Minimal padding for very small screens (under 375px width) */
+@media (max-width: 375px) {
+  .safe-area-full {
+    padding-top: max(env(safe-area-inset-top), 0.75rem);
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+    padding-left: max(env(safe-area-inset-left), 0.5rem);
+    padding-right: max(env(safe-area-inset-right), 0.5rem);
   }
 }
