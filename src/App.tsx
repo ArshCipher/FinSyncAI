@@ -9,7 +9,7 @@ import { OCRService } from './services/ocrService';
 import { StateManager, ConversationState } from './services/stateGraph';
 import { SpinSalesEngine } from './services/spinSales';
 import { SentimentAnalyzer } from './services/sentimentAnalysis';
-import { QuickReplyChips, QUICK_REPLIES, QuickReply } from './components/QuickReplyChips';
+import { QUICK_REPLIES, QuickReply } from './components/QuickReplyChips';
 import { EMIAffordabilityCalculator } from './services/emiAffordability';
 import { pdfGenerator } from './services/pdfGenerator';
 import { emailService } from './services/emailService';
@@ -1132,15 +1132,15 @@ function App() {
   };
 
   return (
-    <div className="fixed inset-0 bg-dark bg-gradient-premium overflow-hidden">
-      <div className="h-full w-full grid grid-cols-1 lg:grid-cols-2">
+    <div className="fixed inset-0 bg-dark bg-gradient-premium">
+      <div className="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
         {/* Left: Hero Section */}
-        <div className="hidden lg:flex">
+        <div className="hidden lg:flex overflow-hidden">
           <Hero />
         </div>
 
         {/* Right: Chat Section */}
-        <div className="flex flex-col h-full w-full">
+        <div className="relative overflow-hidden">
           <ChatWindow
             messages={messages}
             isLoading={isLoading}
@@ -1149,16 +1149,9 @@ function App() {
             onSend={handleSend}
             onFileUpload={handleFileUpload}
             showFileUpload={showFileUpload}
+            quickReplies={quickReplies}
+            onQuickReply={handleQuickReply}
           />
-          
-          {/* Quick Reply Chips - Integrated inside chat */}
-          {quickReplies.length > 0 && (
-            <QuickReplyChips 
-              options={quickReplies}
-              onSelect={handleQuickReply}
-              disabled={isLoading}
-            />
-          )}
         </div>
       </div>
     </div>

@@ -11,6 +11,8 @@ interface ChatWindowProps {
   onSend: () => void;
   onFileUpload?: (file: File) => void;
   showFileUpload?: boolean;
+  quickReplies?: string[];
+  onQuickReply?: (reply: string) => void;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ 
@@ -49,9 +51,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center h-full w-full px-4 sm:px-8 lg:px-12 xl:px-20 py-4 sm:py-6 lg:py-8 animate-fade-in-up safe-area">
+    <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-8 lg:px-12 xl:px-20 py-4 sm:py-6 lg:py-8 safe-area">
       {/* Chat card with glassmorphism */}
-      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl overflow-hidden" style={{ height: 'min(calc(100vh - 2rem), calc(100% - 2rem))' }}>
+      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl" style={{ height: 'calc(100% - 2rem)', maxHeight: 'calc(100vh - 2rem)' }}>
         {/* macOS-style window controls */}
         <div className="flex items-center gap-2 px-6 py-4 border-b border-white/5">
           <div className="flex gap-2">
@@ -83,6 +85,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             <div ref={messagesEndRef} />
           </div>
         </div>
+
+        {/* Quick Reply Chips */}
+        {quickReplies && quickReplies.length > 0 && (
+          <div className="px-6 py-3 border-t border-white/5">
+            <div className="flex flex-wrap gap-2">
+              {quickReplies.map((reply, index) => (
+                <button
+                  key={index}
+                  onClick={() => onQuickReply?.(reply)}
+                  disabled={isLoading}
+                  className="px-4 py-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {reply}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Input area */}
         <div className="p-6 border-t border-white/5">
