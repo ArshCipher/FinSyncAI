@@ -26,6 +26,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  console.log('🟢 ChatWindow render - showFileUpload:', showFileUpload);
+
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

@@ -810,6 +810,7 @@ function App() {
           };
 
           setMessages((prev) => [...prev, rejectionMessage]);
+          console.log('🔴 CONDITIONAL APPROVAL - Setting showFileUpload to TRUE');
           setShowFileUpload(true);
           setQuickReplies(QUICK_REPLIES.approval);
           stateManager.forceTransition('CONDITIONAL_APPROVAL');
