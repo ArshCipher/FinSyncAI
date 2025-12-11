@@ -65,7 +65,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   return (
     <div className="w-full h-full flex items-center justify-center">
       {/* Chat card with glassmorphism */}
-      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl" style={{ height: '100%', maxHeight: 'min(98vh, calc(100% - 0.5rem))' }}>
+      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl" style={{ height: '100%', maxHeight: 'min(90vh, calc(100% - 2rem))' }}>
         {/* macOS-style window controls */}
         <div className="flex items-center gap-2 px-6 py-4 border-b border-white/5">
           <div className="flex gap-2">

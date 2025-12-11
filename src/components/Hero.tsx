@@ -3,7 +3,7 @@ import React from 'react';
 const Hero: React.FC = () => {
 
   return (
-    <div className="flex flex-col justify-center h-full px-4 sm:px-6 lg:px-8 xl:px-10 max-w-4xl overflow-y-auto scrollbar-premium py-2">
+    <div className="flex flex-col justify-center h-full px-4 sm:px-6 lg:px-8 xl:px-10 max-w-4xl overflow-y-auto scrollbar-premium py-3">
       {/* Badge */}
       <div className="inline-flex mb-8 animate-fade-in-up">
         <div className="glass px-4 py-2 rounded-full">

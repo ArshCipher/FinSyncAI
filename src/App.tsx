@@ -1133,7 +1133,7 @@ function App() {
 
   return (
     <div className="fixed inset-0 bg-dark bg-gradient-premium">
-      <div className="absolute inset-0 grid grid-cols-1 xl:grid-cols-2 p-1 sm:p-2 lg:p-2 xl:p-2 2xl:p-1">
+      <div className="absolute inset-0 grid grid-cols-1 xl:grid-cols-2 p-2 sm:p-3 lg:p-3 xl:p-3 2xl:p-2">
         {/* Left: Hero Section */}
         <div className="hidden xl:flex overflow-hidden">
           <Hero />
