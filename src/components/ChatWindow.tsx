@@ -55,9 +55,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-8 lg:px-12 xl:px-20 py-4 sm:py-6 lg:py-8 safe-area">
+    <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-6 lg:px-8 safe-area-full">
       {/* Chat card with glassmorphism */}
-      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl" style={{ height: 'calc(100% - 2rem)', maxHeight: 'calc(100vh - 2rem)' }}>
+      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl" style={{ height: 'min(90vh, calc(100% - 4rem))', maxHeight: 'min(90vh, calc(100% - 4rem))' }}>
         {/* macOS-style window controls */}
         <div className="flex items-center gap-2 px-6 py-4 border-b border-white/5">
           <div className="flex gap-2">
