@@ -29,12 +29,20 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   onQuickReply
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   console.log('🟢 ChatWindow render - showFileUpload:', showFileUpload);
 
-  // Auto-scroll to bottom
+  // Ensure chat starts at top on mount
+  useEffect(() => {
+    if (messagesContainerRef.current && messages.length === 0) {
+      messagesContainerRef.current.scrollTop = 0;
+    }
+  }, []);
+
+  // Auto-scroll to bottom when messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
@@ -57,7 +65,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   return (
     <div className="w-full h-full flex items-center justify-center">
       {/* Chat card with glassmorphism */}
-      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl" style={{ height: '100%', maxHeight: 'calc(100vh - 8rem)' }}>
+      <div className="glass rounded-2xl sm:rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl" style={{ height: '100%', maxHeight: 'min(98vh, calc(100% - 0.5rem))' }}>
         {/* macOS-style window controls */}
         <div className="flex items-center gap-2 px-6 py-4 border-b border-white/5">
           <div className="flex gap-2">
@@ -71,7 +79,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         </div>
 
         {/* Messages area */}
-        <div className="flex-1 overflow-y-auto scrollbar-premium px-6 py-6">
+        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto scrollbar-premium px-6 py-6">
           <div className="space-y-4">
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
