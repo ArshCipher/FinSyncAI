@@ -9,20 +9,13 @@ import { OCRService } from './services/ocrService';
 import { StateManager, ConversationState } from './services/stateGraph';
 import { SpinSalesEngine } from './services/spinSales';
 import { SentimentAnalyzer } from './services/sentimentAnalysis';
-import { QuickReply } from './components/QuickReplyChips';
+import { QuickReply, QUICK_REPLIES } from './components/QuickReplyChips';
 import { EMIAffordabilityCalculator } from './services/emiAffordability';
 import { pdfGenerator } from './services/pdfGenerator';
 import { emailService } from './services/emailService';
 
 // API configuration  
 const API_BASE_URL = 'http://localhost:5000/api';
-
-// Quick reply options
-const QUICK_REPLIES: QuickReply[] = [
-  { id: '1', text: 'Check Eligibility', action: 'check_eligibility', icon: '✓' },
-  { id: '2', text: 'Loan Products', action: 'loan_products', icon: '📋' },
-  { id: '3', text: 'Interest Rates', action: 'interest_rates', icon: '💰' },
-];
 
 // Initial messages
 const initialMessages: Message[] = [
