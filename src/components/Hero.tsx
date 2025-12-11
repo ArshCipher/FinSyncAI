@@ -3,7 +3,7 @@ import React from 'react';
 const Hero: React.FC = () => {
 
   return (
-    <div className="flex flex-col justify-center h-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-4xl">
+    <div className="flex flex-col justify-center h-full px-4 sm:px-6 lg:px-8 xl:px-10 max-w-4xl overflow-y-auto scrollbar-premium py-8">
       {/* Badge */}
       <div className="inline-flex mb-8 animate-fade-in-up">
         <div className="glass px-4 py-2 rounded-full">
@@ -15,7 +15,7 @@ const Hero: React.FC = () => {
 
       {/* Hero Heading */}
       <h1 
-        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] tracking-tight mb-6 sm:mb-8 animate-fade-in-up"
+        className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight mb-6 sm:mb-8 animate-fade-in-up"
         style={{ animationDelay: '0.1s' }}
       >
         Loan underwriting,
@@ -25,7 +25,7 @@ const Hero: React.FC = () => {
 
       {/* Subcopy */}
       <p 
-        className="text-base sm:text-lg lg:text-xl xl:text-2xl text-white/60 leading-relaxed mb-8 sm:mb-12 max-w-2xl animate-fade-in-up"
+        className="text-base sm:text-lg lg:text-xl xl:text-xl text-white/60 leading-relaxed mb-8 sm:mb-12 max-w-2xl animate-fade-in-up"
         style={{ animationDelay: '0.2s' }}
       >
         FinSync AI orchestrates multiple specialized agents to deliver instant,
