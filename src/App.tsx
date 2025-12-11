@@ -14,8 +14,8 @@ import { EMIAffordabilityCalculator } from './services/emiAffordability';
 import { pdfGenerator } from './services/pdfGenerator';
 import { emailService } from './services/emailService';
 
-// API configuration  
-const API_BASE_URL = 'http://localhost:5000/api';
+// API configuration - use relative URL so it works in both dev and production
+const API_BASE_URL = '/api';
 
 // Initial messages
 const initialMessages: Message[] = [
