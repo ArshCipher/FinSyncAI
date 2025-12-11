@@ -15,17 +15,26 @@
 
 body {
   margin: 0;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
+  min-height: -webkit-fill-available; /* iOS Safari fix */
   background: #050509;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+html {
+  height: -webkit-fill-available; /* iOS Safari fix */
 }
 
 #root {
   height: 100vh;
+  height: -webkit-fill-available; /* iOS Safari fix */
   overflow: hidden;
+  position: relative;
 }
 
 /* Premium scrollbar */
