@@ -357,8 +357,18 @@ function App() {
   
   // PDF Download handler
   const handlePDFDownload = async () => {
+    console.log('🔵 PDF Download initiated');
+    console.log('Context:', { 
+      hasSanctionLetter: !!context.sanctionLetter, 
+      hasCustomer: !!context.currentCustomer,
+      customerName: context.currentCustomer?.name,
+      loanAmount: context.requestedAmount
+    });
+    
     if (!context.sanctionLetter || !context.currentCustomer) {
-      addMessage('Error: No sanction letter available to download.', 'system');
+      const errorMsg = 'Error: No sanction letter available to download. Please complete the loan approval process first.';
+      console.error('🔴 PDF Download failed:', errorMsg);
+      addMessage(errorMsg, 'system');
       return;
     }
     
@@ -366,6 +376,12 @@ function App() {
     addMessage('Generating your sanction letter PDF...', 'sanction');
     
     try {
+      console.log('🔵 Calling PDF generator with:', {
+        customerName: context.currentCustomer.name,
+        loanAmount: context.requestedAmount,
+        customerId: context.currentCustomer.customerId
+      });
+      
       const filename = await pdfGenerator.generateAndDownload({
         sanctionLetter: context.sanctionLetter,
         customerName: context.currentCustomer.name,
@@ -373,10 +389,12 @@ function App() {
         customerId: context.currentCustomer.customerId
       });
       
-      addMessage(`PDF downloaded successfully!\n\nFilename: ${filename}\n\nPlease check your Downloads folder.`, 'sanction');
+      console.log('✅ PDF generated successfully:', filename);
+      addMessage(`✅ PDF downloaded successfully!\n\nFilename: ${filename}\n\nPlease check your Downloads folder.`, 'sanction');
       setContext((prev) => ({ ...prev, pdfGenerated: true }));
     } catch (error) {
-      addMessage(`Error: PDF generation failed: ${error}`, 'system');
+      console.error('🔴 PDF generation error:', error);
+      addMessage(`Error: PDF generation failed. ${error instanceof Error ? error.message : String(error)}\n\nPlease try again or contact support.`, 'system');
     } finally {
       setIsLoading(false);
     }

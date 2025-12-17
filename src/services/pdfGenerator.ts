@@ -142,14 +142,17 @@ export class PDFGenerator {
   }
 
   downloadPDF(blob: Blob, filename: string): void {
+    console.log('📥 Initiating PDF download:', { filename, blobSize: blob.size });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);
+    console.log('📥 Clicking download link...');
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    console.log('✅ PDF download triggered successfully');
   }
 
   async generateAndDownload(options: PDFGenerationOptions): Promise<string> {
