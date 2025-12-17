@@ -827,22 +827,49 @@ function App() {
           return;
         }
 
-        // If conditional approval
+        // If conditional approval - Generate PDF immediately
         if (result.decision === 'CONDITIONAL_APPROVED') {
+          const interestRate = calculateInterestRate(creditScore);
+          const tenureToUse = updatedContext.requestedTenure || 36;
+          const emiData = await OfferMartService.calculateEMI(result.approvedAmount, interestRate, tenureToUse);
+          
+          const sanctionLetter = SanctionLetterGenerator.generate(
+            updatedContext.currentCustomer!,
+            result.approvedAmount,
+            interestRate,
+            tenureToUse,
+            emiData?.emi || 0
+          );
+
+          updatedContext = {
+            ...updatedContext,
+            sanctionLetter,
+            underwritingResult: { ...result, emi: emiData?.emi },
+            sanctionLetterGenerated: true
+          };
+          setContext(updatedContext);
+          stateManager.updateContext({ 
+            decision: 'Conditional Approval',
+            sanctionLetterGenerated: true 
+          });
+          stateManager.forceTransition('FINAL_APPROVAL');
+          const nextState = stateManager.transition();
+          console.log('Conditional approval with PDF, state:', nextState);
+
           const conditionsList = result.conditions?.map(c => `• ${c}`).join('\n') || '';
-          const rejectionMessage: Message = {
+          const sanctionMessage: Message = {
             id: (Date.now() + 1).toString(),
             sender: 'assistant',
-            content: `Our Underwriting Agent has reviewed your application:\n\n${result.reason}\n\nRequired Documents:\n${conditionsList}\n\nPlease upload your salary slip using the file upload button below to proceed with verification.`,
+            content: `CONDITIONAL APPROVAL! Your loan has been approved pending verification.\n\n${result.reason}\n\nRequired Documents:\n${conditionsList}\n\nHere's your provisional Sanction Letter:\n\n${sanctionLetter}\n\nNext Steps:\n• Download your PDF sanction letter below\n• Upload required documents for final verification\n• Complete final KYC documentation\n• Funds will be disbursed within 48 hours after verification\n\nThis offer is valid until ${new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN')}\n\nUse the quick actions below to download or email your sanction letter!`,
             timestamp: new Date().toISOString(),
-            meta: { agent: 'underwriting' },
+            meta: { agent: 'sanction' },
           };
 
-          setMessages((prev) => [...prev, rejectionMessage]);
+          setMessages((prev) => [...prev, sanctionMessage]);
           console.log('🔴 CONDITIONAL APPROVAL - Setting showFileUpload to TRUE');
           setShowFileUpload(true);
-          setQuickReplies(QUICK_REPLIES.approval);
-          stateManager.forceTransition('CONDITIONAL_APPROVAL');
+          setQuickReplies(QUICK_REPLIES.postApproval);
+          stateManager.forceTransition('SANCTION_LETTER');
           setIsLoading(false);
           return;
         }
@@ -955,10 +982,10 @@ function App() {
             };
             setContext(updatedContext);
             
-            // Generate sanction letter if approved
+            // Generate sanction letter PDF after document verification
             if (result.decision === 'INSTANT_APPROVED' || result.decision === 'CONDITIONAL_APPROVED') {
               const interestRate = calculateInterestRate(creditScore);
-              const tenure = 36;
+              const tenure = updatedContext.requestedTenure || 36;
               const emiData = await OfferMartService.calculateEMI(result.approvedAmount, interestRate, tenure);
               
               const sanctionLetter = SanctionLetterGenerator.generate(
@@ -973,13 +1000,14 @@ function App() {
                 ...updatedContext,
                 sanctionLetter,
                 documentVerified: true,
-                finalDecision: 'Approved'
+                finalDecision: 'Approved',
+                sanctionLetterGenerated: true
               };
               setContext(updatedContext);
               stateManager.updateContext({ 
                 documentVerified: true,
-                finalDecision: 'Approved',
-                sanctionLetterGenerated: true
+                sanctionLetterGenerated: true,
+                finalDecision: 'Approved'
               });
               const nextState = stateManager.transition(); // Auto-transition DOCUMENT_UPLOAD -> FINAL_APPROVAL
               console.log('Document verified & approved, state:', nextState);
@@ -987,7 +1015,7 @@ function App() {
               const sanctionMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 sender: 'assistant',
-                content: `CONGRATULATIONS! Your loan has been APPROVED after document verification.\n\n${result.reason}\n\nHere's your official Sanction Letter:\n\n${sanctionLetter}\n\nNext Steps:\n> Review the sanction letter carefully\n> Submit signed copy within 15 days\n> Complete final KYC documentation\n> Funds will be disbursed within 48 hours\n\nThis offer is valid until ${new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN')}\n\nWould you like to proceed with the documentation?`,
+                content: `FINAL APPROVAL GRANTED! ✅\n\n${result.reason}\n\nHere's your complete Sanction Letter:\n\n${sanctionLetter}\n\nNext Steps:\n• Download your PDF sanction letter below\n• Review all terms and conditions\n• Accept the offer to proceed\n• Funds will be disbursed within 48 hours\n\nThis is a binding offer valid until ${new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN')}\n\nUse the quick actions below to download or email your sanction letter!`,
                 timestamp: new Date().toISOString(),
                 meta: { agent: 'sanction' },
               };
