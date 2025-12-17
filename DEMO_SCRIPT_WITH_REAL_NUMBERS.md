@@ -1,9 +1,13 @@
-# 🎬 FinSync AI Demo Video Script - UPDATED WITH REAL DATABASE NUMBERS
-## EY Techathon 6.0 | Production-Ready Demo
+# 🎬 FinSync AI Demo Video Script - MongoDB Atlas Production Database
+## EY Techathon 6.0 | Live Demo on Railway
+
+> **✅ DATABASE STATUS**: All 11 customers seeded to MongoDB Atlas  
+> **✅ RAILWAY DEPLOYMENT**: https://finsync-ai-mneen.up.railway.app  
+> **⚠️ REQUIRED**: Set `MONGODB_URI` environment variable in Railway dashboard (see RAILWAY_SETUP.md)
 
 ---
 
-## **📊 ACTUAL DATABASE CUSTOMERS (MongoDB Atlas)**
+## **📊 ACTUAL DATABASE CUSTOMERS (MongoDB Atlas Cloud)**
 
 | **Name** | **Phone** | **Credit Score** | **Pre-Approved Limit** | **Monthly Income** | **Use Case** |
 |----------|-----------|------------------|------------------------|-------------------|--------------|
@@ -90,7 +94,8 @@ Your sanction letter is ready! Download PDF below or receive via email."
 - Credit score 780 (good but not instant for high amounts)
 - Self-employed = needs income verification
 - ₹3L pre-approved but can request more
-- Perfect for showing conditional → OCR → final approval flow
+- **NEW**: Gets provisional PDF at conditional approval, then final PDF after OCR
+- Perfect for showing conditional → immediate PDF → OCR → final approval flow
 
 ### **Conversation Script**:
 
@@ -137,20 +142,26 @@ Let's get you approved today. Your phone number?"
 
 You've requested ₹5,00,000 (1.67× your pre-approved limit)."
 
-🤖 AI: [CONDITIONAL APPROVAL - PDF STILL GENERATED!]
+🤖 AI: [CONDITIONAL APPROVAL - PROVISIONAL PDF GENERATED IMMEDIATELY!]
 "CONDITIONAL APPROVAL! ✅
 
-I can approve ₹5,00,000, but I need your latest income proof to verify affordability.
+I can approve ₹5,00,000, but I need to verify your income for this amount.
 
-Here's your provisional sanction letter (ready to download below).
+Your provisional sanction letter is ready! You can download it now.
+
+📝 SANCTION LETTER HIGHLIGHTS:
+• Provisional Amount: ₹5,00,000
+• Interest Rate: 11.5% p.a.
+• Subject to income verification
+• Valid for 15 days
 
 To proceed to final approval, please upload:
 • Latest 3 months bank statement OR
 • Latest ITR with computation OR  
-• Recent business financial statement
+• Recent salary slip (for self-employed: business financials)
 
-[FILE UPLOAD BUTTON APPEARS]
-[PDF DOWNLOAD BUTTON APPEARS - for provisional letter]"
+[PDF DOWNLOAD BUTTON APPEARS - Provisional Letter]
+[FILE UPLOAD BUTTON APPEARS]"
 
 👤 User: [Click file upload, select salary slip/ITR image]
 
@@ -179,15 +190,19 @@ After document verification:
 📊 Interest Rate: 11.5% p.a.
 ✅ Processing Fee: ₹6,750 (1.5%)
 
-Your complete sanction letter is ready!
+Your updated final sanction letter is ready!
 
-Download your updated PDF below with:
-✓ RBI-compliant terms
-✓ Full amortization schedule  
-✓ Prepayment clauses
-✓ Grievance redressal process
+📝 DOWNLOAD YOUR PDF with:
+✓ RBI-compliant terms & conditions
+✓ Complete amortization schedule (36 months)  
+✓ Prepayment & foreclosure clauses
+✓ Grievance redressal (3-level escalation)
+✓ CIN: U65999MH2024PLC123456
+✓ NBFC Registration: N-14.03299
 
-[UPDATED PDF DOWNLOAD BUTTON]"
+[DOWNLOAD UPDATED PDF BUTTON]
+
+Our team will call you within 2 hours to complete disbursement."
 ```
 
 ### **What to Highlight**:
@@ -319,6 +334,20 @@ Your sanction letter is ready!"
 
 ## **📋 DEMO PREPARATION CHECKLIST**
 
+### **CRITICAL: Before Recording, Verify MongoDB Atlas Setup**:
+
+⚠️ **Railway Environment Variable** (MUST BE SET):
+   - Go to Railway dashboard → FinSyncAI project → Variables tab
+   - Add: `MONGODB_URI` = `mongodb+srv://testadmin:root123@cluster0.ynktkwu.mongodb.net/finsync?retryWrites=true&w=majority&appName=Cluster0`
+   - Click **Deploy** and wait ~45 seconds for restart
+   - 📝 **See RAILWAY_SETUP.md for detailed instructions**
+
+✅ **Verify Atlas Data is Accessible**:
+   - Open: https://finsync-ai-mneen.up.railway.app
+   - Test with Priya's phone: `9876543211`
+   - **Expected**: "Welcome back, Priya Sharma! You're pre-approved for ₹10,00,000..."
+   - **If fails**: Check Railway logs, verify MONGODB_URI is set
+
 ### **Before Recording**:
 
 ✅ **Test all phone numbers on live site** (Railway + MongoDB Atlas):
@@ -402,14 +431,77 @@ Railway backend expects phone numbers **with country code** in database (`+91-98
 
 ## **✅ VALIDATION CHECKLIST**
 
-Before submitting demo video:
+Before recording demo video:
 
+- [ ] **Railway MONGODB_URI environment variable is set** ← CRITICAL!
+- [ ] **Tested Priya's phone on live URL** (confirms Atlas connection)
 - [ ] Priya shows **real name** in responses (not [customer name])
 - [ ] PDF downloads show **legal formatting** (CIN, APR, T&Cs)
 - [ ] OCR shows **income extraction** (₹1,18,500 visible)
 - [ ] Rejection shows **DTI calculation** (64.8% with remediation)
 - [ ] All timestamps are **visible** (proves speed claims)
 - [ ] GitHub repo link is **shown** (proves code depth)
+
+---
+
+---
+
+## **🔧 TROUBLESHOOTING GUIDE**
+
+### **Issue 1: "Customer not found" for Priya (9876543211)**
+
+**Cause**: Railway doesn't have MONGODB_URI environment variable set
+
+**Fix**:
+1. Go to Railway dashboard: https://railway.app/dashboard
+2. Select FinSyncAI project
+3. Click **Variables** tab
+4. Click **New Variable**
+5. Set: `MONGODB_URI` = `mongodb+srv://testadmin:root123@cluster0.ynktkwu.mongodb.net/finsync?retryWrites=true&w=majority&appName=Cluster0`
+6. Click **Deploy** 
+7. Wait 45 seconds for Railway to restart
+8. Test again with 9876543211
+
+**Verify**: Check Railway logs for "✓ Connected to MongoDB"
+
+---
+
+### **Issue 2: PDF Download Button Not Appearing**
+
+**Cause**: Recent code changes (commit 71d09d3) may not be deployed to Railway
+
+**Fix**:
+1. Check latest commit on Railway matches GitHub
+2. If not, manually trigger redeploy in Railway dashboard
+3. Ensure `sanctionLetterGenerated: true` is set in conversation state
+
+**Expected**: PDF button appears for BOTH conditional and instant approvals now
+
+---
+
+### **Issue 3: OCR Not Extracting Income**
+
+**Cause**: Image quality too low or text not readable
+
+**Fix**:
+1. Use high-resolution bank statement image (at least 1200px wide)
+2. Ensure text is clear and not blurry
+3. Try different lighting if using phone camera
+4. Use mock statement from `server/mockDocuments/` folder (if created)
+
+**Backup Plan**: Skip OCR demo if time is tight - focus on instant approval (Demo 1)
+
+---
+
+### **Issue 4: Live URL Not Responding**
+
+**Cause**: Railway free tier may have cold start delays
+
+**Fix**:
+1. Open https://finsync-ai-mneen.up.railway.app in browser
+2. Wait 10-15 seconds for initial load (cold start)
+3. Refresh page once loaded
+4. Keep tab open 5 minutes before recording (keeps server warm)
 
 ---
 

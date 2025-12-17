@@ -42,7 +42,10 @@ export interface LoanOffer {
   minCreditScore: number;
 }
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Use relative URL for production, localhost for development
+const API_BASE_URL = import.meta.env.PROD 
+  ? '/api'  // Production (Railway) - use relative path
+  : 'http://localhost:5000/api';  // Development - use localhost
 
 // CRM Service - Customer Lookup
 export const CRMService = {

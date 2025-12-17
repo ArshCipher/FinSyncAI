@@ -52,12 +52,36 @@ if (existsSync(distPath)) {
 
 app.use(express.static(distPath));
 
+// Helper function to normalize phone numbers for consistent matching
+function normalizePhone(phone) {
+  // Remove all spaces, hyphens, and plus signs
+  let cleaned = phone.replace(/[\s\-+]/g, '');
+  
+  // If it starts with 91, keep it
+  // Otherwise, add 91 prefix
+  if (!cleaned.startsWith('91')) {
+    cleaned = '91' + cleaned;
+  }
+  
+  return cleaned;
+}
+
 // ============ CRM Service ============
 app.get('/api/customers/phone/:phone', async (req, res) => {
   try {
     const db = getDB();
+    const normalizedInput = normalizePhone(req.params.phone);
+    
+    // Try multiple phone formats to match database entries
+    const phoneVariants = [
+      req.params.phone,                    // Original input
+      `+91-${normalizedInput.slice(-10)}`, // +91-XXXXXXXXXX format
+      `+91${normalizedInput.slice(-10)}`,  // +91XXXXXXXXXX format
+      normalizedInput.slice(-10),          // Last 10 digits only
+    ];
+    
     const customer = await db.collection('customers').findOne({ 
-      phone: req.params.phone 
+      phone: { $in: phoneVariants }
     });
     
     if (!customer) {
