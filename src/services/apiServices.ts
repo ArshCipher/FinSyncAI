@@ -43,7 +43,8 @@ export interface LoanOffer {
 }
 
 // Use relative URL for production, localhost for development
-const API_BASE_URL = import.meta.env.PROD 
+// Check if running in production by looking at window.location
+const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
   ? '/api'  // Production (Railway) - use relative path
   : 'http://localhost:5000/api';  // Development - use localhost
 
